@@ -8,15 +8,15 @@ from customers.serializers import CustomerListSerializer, CustomerSerializer
 
 class CustomerListCreateView(generics.ListCreateAPIView):
     """
-    HTTP Methods handled:
+    HTTP Methods:
     - GET /api/customers/ → list all customers
     - POST /api/customers/ → create new customer
     """
     
     queryset = Customer.objects.all()
-    permission_classes = [IsAuthenticated]  # Requires JWT token
+    permission_classes = [IsAuthenticated] 
     
-    # DRF Filters - these are DRF-specific features
+    # DRF Filters
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['name', 'email']     # ?search=john
     ordering_fields = ['created_at', 'name']  # ?ordering=-name
@@ -52,10 +52,6 @@ class CustomerListCreateView(generics.ListCreateAPIView):
 
 class CustomerDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
-    Generic View for single object operations:
-    - RetrieveUpdateDestroyAPIView handles GET, PUT, DELETE
-    - Similar to Django's DetailView + UpdateView + DeleteView
-    
     HTTP Methods:
     - GET /api/customers/uuid/ → get single customer
     - PUT /api/customers/uuid/ → update customer
