@@ -1,0 +1,417 @@
+{
+	"info": {
+		"_postman_id": "824f5520-2e78-48e3-9137-a63bda396ac7",
+		"name": "Customer Management API",
+		"description": "Complete API collection for Customer Management System with JWT Authentication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19118657"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "User Registration",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('access_token', response.tokens.access);",
+									"    pm.collectionVariables.set('refresh_token', response.tokens.refresh);",
+									"    pm.test('Registration successful', function () {",
+									"        pm.response.to.have.status(201);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"decoderanu11\",\n    \"email\": \"anu@example.com\",\n    \"password\": \"StrongPass123!\",\n    \"password_confirm\": \"StrongPass123!\",\n    \"first_name\": \"Anu\",\n    \"last_name\": \"Developer\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/register/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"register",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get JWT Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('access_token', response.access);",
+									"    pm.collectionVariables.set('refresh_token', response.refresh);",
+									"    pm.test('Login successful', function () {",
+									"        pm.response.to.have.status(200);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"decoderanu11\",\n    \"password\": \"StrongPass123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/token/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"token",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh JWT Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/token/refresh/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"token",
+								"refresh",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer Management",
+			"item": [
+				{
+					"name": "Create Customer",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('customer_id', response.id);",
+									"    pm.test('Customer created successfully', function () {",
+									"        pm.response.to.have.status(201);",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"mobile\": \"+1234567890\",\n    \"address\": \"123 Main Street, New York, NY 10001\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/customers/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"customers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List All Customers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/customers/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"customers",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Customers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/customers/?search=john",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"customers",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "john"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Customer by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/customers/{{customer_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"customers",
+								"{{customer_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Customer",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Smith\",\n    \"email\": \"john.smith@example.com\",\n    \"mobile\": \"+1234567891\",\n    \"address\": \"456 Oak Avenue, Los Angeles, CA 90210\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/customers/{{customer_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"customers",
+								"{{customer_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Customer",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/customers/{{customer_id}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"customers",
+								"{{customer_id}}",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Advanced Features",
+			"item": [
+				{
+					"name": "Customers with Pagination",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/customers/?page=1&page_size=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"customers",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customers with Ordering",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/customers/?ordering=-created_at",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"customers",
+								""
+							],
+							"query": [
+								{
+									"key": "ordering",
+									"value": "-created_at"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000/api"
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "refresh_token",
+			"value": ""
+		},
+		{
+			"key": "customer_id",
+			"value": ""
+		}
+	]
+}
