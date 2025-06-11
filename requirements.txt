@@ -6,3 +6,4 @@ python-decouple==3.8
 django-cors-headers==4.3.1
 django-filter==25.1
 faker==37.3.0
+setuptools==68.0.0
